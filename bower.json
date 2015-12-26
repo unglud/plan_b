@@ -1,0 +1,21 @@
+{
+  "name": "plan_b",
+  "authors": [
+    "unglued <alex@apus.ag>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "4.0.0-alpha.2"
+  }
+}
