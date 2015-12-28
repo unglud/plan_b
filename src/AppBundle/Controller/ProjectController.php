@@ -64,7 +64,7 @@ class ProjectController extends Controller
             $em->persist($project);
             $em->flush();
 
-            return $this->redirectToRoute('project_show', array('id' => $project->getId()));
+            return $this->redirectToRoute('project_show', ['slug'=>$project->getSlug()]);
         }
 
         return $this->render('project/new.html.twig', array(
@@ -86,13 +86,14 @@ class ProjectController extends Controller
         $em = $this->getDoctrine()->getManager();
         $project = $em->getRepository('AppBundle:Project')->findBySlug($slug);
 
-        if(!$project) throw $this->createNotFoundException("Project with name \"$slug\" not found");
+        if (!$project) {
+            throw $this->createNotFoundException("Project with name \"$slug\" not found");
+        }
 
         $delete_form = $this->createDeleteForm($project)->createView();
 
         $submenu = (new Menu([
-            new MenuItem($this->generateUrl('project_edit', compact('slug')), 'Edit'),
-            new MenuItem(['form'=>$delete_form], 'Delete')
+            new MenuItem($this->generateUrl('project_edit', compact('slug')), 'Edit')
         ]))->getItems();
 
         return $this->render('project/show.html.twig', compact('project', 'delete_form', 'submenu'));
@@ -120,14 +121,15 @@ class ProjectController extends Controller
             $em->persist($project);
             $em->flush();
 
-            return $this->redirectToRoute('project_edit', array('id' => $project->getId()));
+            return $this->redirectToRoute('project_show', ['slug'=>$project->getSlug()]);
         }
 
-        return $this->render('project/edit.html.twig', array(
-            'project' => $project,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $submenu = (new Menu([
+            new MenuItem(['form'=>$deleteForm->createView()], 'Delete')
+        ]))->getItems();
+        $edit_form = $editForm->createView();
+
+        return $this->render('project/edit.html.twig', compact('project','edit_form','submenu'));
     }
 
     /**
@@ -178,7 +180,9 @@ class ProjectController extends Controller
      */
     private function ubiquitySlug($slug, $newSlug = '')
     {
-        if(!$newSlug) $newSlug = $slug;
+        if (!$newSlug) {
+            $newSlug = $slug;
+        }
         $em = $this->getDoctrine()->getManager();
         $project = $em->getRepository('AppBundle:Project')->findBySlug($slug);
 
