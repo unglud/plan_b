@@ -28,6 +28,25 @@
             {% endif %}
         {% endblock %}
     </ul>
+
+    <ul class="nav nav-pills pull-xs-right">
+        {% block submenu %}
+            {% if submenu is defined %}
+                {% for item in submenu %}
+                    <li class="nav-item {% if item.active %}active{% endif %}">
+                        {% if item.form %}
+                            {{ form_start(item.route) }}
+                            <input type="submit" value="Delete" class="btn btn-danger">
+                            {{ form_end(item.route) }}
+                        {% else %}
+                            <a class="nav-link" href="{{ item.route }}">{{ item.title }}</a>
+                        {% endif %}
+
+                    </li>
+                {% endfor %}
+            {% endif %}
+        {% endblock %}
+    </ul>
 </nav>
 <div class="container-fluid">
     {% block body %}{% endblock %}

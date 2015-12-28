@@ -78,29 +78,39 @@ class ProjectController extends Controller
      *
      * @Route("/{slug}", name="project_show")
      * @Method("GET")
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction($slug)
     {
         $em = $this->getDoctrine()->getManager();
-
         $project = $em->getRepository('AppBundle:Project')->findBySlug($slug);
 
-        $deleteForm = $this->createDeleteForm($project);
+        if(!$project) throw $this->createNotFoundException("Project with name \"$slug\" not found");
 
-        return $this->render('project/show.html.twig', array(
-            'project' => $project,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $delete_form = $this->createDeleteForm($project)->createView();
+
+        $submenu = (new Menu([
+            new MenuItem($this->generateUrl('project_edit', compact('slug')), 'Edit'),
+            new MenuItem(['form'=>$delete_form], 'Delete')
+        ]))->getItems();
+
+        return $this->render('project/show.html.twig', compact('project', 'delete_form', 'submenu'));
     }
 
     /**
      * Displays a form to edit an existing Project entity.
      *
-     * @Route("/{id}/edit", name="project_edit")
+     * @Route("/{slug}/edit", name="project_edit")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, Project $project)
+    public function editAction(Request $request, $slug)
     {
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository('AppBundle:Project')->findBySlug($slug);
         $deleteForm = $this->createDeleteForm($project);
         $editForm = $this->createForm('AppBundle\Form\ProjectType', $project);
         $editForm->handleRequest($request);
@@ -123,11 +133,16 @@ class ProjectController extends Controller
     /**
      * Deletes a Project entity.
      *
-     * @Route("/{id}", name="project_delete")
+     * @Route("/{slug}", name="project_delete")
      * @Method("DELETE")
+     * @param Request $request
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction(Request $request, Project $project)
+    public function deleteAction(Request $request, $slug)
     {
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository('AppBundle:Project')->findBySlug($slug);
         $form = $this->createDeleteForm($project);
         $form->handleRequest($request);
 
@@ -137,7 +152,7 @@ class ProjectController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('project_index');
+        return $this->redirectToRoute('project');
     }
 
     /**
@@ -150,7 +165,7 @@ class ProjectController extends Controller
     private function createDeleteForm(Project $project)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('project_delete', array('id' => $project->getId())))
+            ->setAction($this->generateUrl('project_delete', array('slug' => $project->getSlug())))
             ->setMethod('DELETE')
             ->getForm();
     }

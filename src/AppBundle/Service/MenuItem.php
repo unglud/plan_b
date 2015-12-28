@@ -13,9 +13,11 @@ namespace AppBundle\Service;
 
 class MenuItem
 {
+
     public $route;
     public $title;
     public $active;
+    public $form = false;
 
     /**
      * MenuItem constructor.
@@ -25,12 +27,18 @@ class MenuItem
      */
     public function __construct($route, $title, $active = false)
     {
-        $this->route = $route;
+        if (is_array($route)) {
+            $this->form = true;
+            $this->route = current($route);
+        } else {
+            $this->route = $route;
+        }
         $this->title = $title;
         $this->active = $active;
     }
 
-    public function toArray(){
+    public function toArray()
+    {
         return (array)$this;
     }
 
