@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\Menu;
+use AppBundle\Service\MenuItem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -28,9 +30,9 @@ class ProjectController extends Controller
 
         $projects = $em->getRepository('AppBundle:Project')->findAll();
 
-        return $this->render('project/index.html.twig', array(
-            'projects' => $projects,
-        ));
+        $menu = (new Menu([new MenuItem('project_new','Add project')]))->getItems();
+
+        return $this->render('project/index.html.twig', compact('projects','menu'));
     }
 
     /**
@@ -44,7 +46,7 @@ class ProjectController extends Controller
     public function newAction(Request $request)
     {
         $project = new Project();
-        $form = $this->createForm('AppBundle\Form\ProjectType', $project);
+        $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

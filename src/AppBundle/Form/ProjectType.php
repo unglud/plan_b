@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ProjectType extends AbstractType
 {
@@ -16,7 +17,7 @@ class ProjectType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('description')
+            ->add('description', TextareaType::class)
             /*->add('createdAt', 'datetime')
             ->add('modifiedAt', 'datetime')*/
         ;

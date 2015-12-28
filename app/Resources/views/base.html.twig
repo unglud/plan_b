@@ -12,11 +12,21 @@
 
 </head>
 <body>
-<nav class="navbar bg-faded">
-    <ul class="nav navbar-nav ">
-        <li class="nav-item active">
-            <a class="nav-link" href="{{ path('project_new') }}">Create new project</a>
-        </li>
+<nav class="navbar bg-faded m-b-1">
+    <ul class="nav navbar-nav">
+        {% block menu %}
+            {% if menu is defined %}
+                {% for item in menu %}
+                    <li class="nav-item {% if item.active %}active{% endif %}">
+                        <a class="nav-link" href="{{ path(item.route) }}">{{ item.title }}</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('project') }}">All projects</a>
+                </li>
+            {% endif %}
+        {% endblock %}
     </ul>
 </nav>
 <div class="container-fluid">

@@ -1,4 +1,8 @@
-plan_b
+Plan B
 ======
 
-A Symfony project created on December 26, 2015, 9:04 pm.
+A new look on Project Management Service
+
+# Features
+
+none yet

@@ -2,19 +2,30 @@
 
 {% block body %}
 
-    <div class="card-deck p-t-1">
-        {% for project in projects %}
+    {% if projects %}
+        <div class="card-deck">
+            {% for project in projects %}
 
-            <div class="card">
-                <a href="{{ path('project_show', { 'id': project.id }) }}">
-                    <div class="card-block">
-                        <h4 class="card-title">{{ project.name }}</h4>
-                        <p class="card-text">{{ project.description }}</p>
-                        {#<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>#}
-                    </div>
-                </a>
+                <div class="card">
+                    <a href="{{ path('project_show', { 'id': project.id }) }}">
+                        <div class="card-block">
+                            <h4 class="card-title">{{ project.name }}</h4>
+                            <p class="card-text">{{ project.description }}</p>
+                            {#<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>#}
+                        </div>
+                    </a>
+                </div>
+
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="jumbotron">
+            <p class="lead text-xs-center">You do not have any projects</p>
+            <hr class="m-y-2">
+            <div class="text-xs-center">
+                <a href="{{ path('project_new') }}" class="btn btn-primary">Create one</a>
             </div>
 
-        {% endfor %}
-    </div>
+        </div>
+    {% endif %}
 {% endblock %}
