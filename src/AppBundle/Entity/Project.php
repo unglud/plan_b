@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Project
  *
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="project")
+ * @ORM\Table(name="project",uniqueConstraints={@ORM\UniqueConstraint(name="account_id_slug", columns={"slug", "account_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ProjectRepository")
  */
 class Project
@@ -16,7 +16,7 @@ class Project
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -35,6 +35,24 @@ class Project
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
+
+    /**
+     * @var string
+     * @ORM\Column(name="slug", type="string", length=100)
+     */
+    private $slug;
+
+    /**
+     * @var int
+     * @ORM\Column(name="account_id", type="integer", options={"unsigned":true})
+     */
+    private $account_id;
+
+    /**
+     * @var int
+     * @ORM\Column(name="status", type="smallint", options={"unsigned":true, "default":1})
+     */
+    private $status;
 
     /**
      * @var \DateTime
@@ -172,5 +190,79 @@ class Project
             $this->setCreatedAt(new \DateTime(date('Y-m-d H:i:s')));
         }
     }
-}
 
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     *
+     * @return Project
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+
+
+    /**
+     * Set accountId
+     *
+     * @param integer $accountId
+     *
+     * @return Project
+     */
+    public function setAccountId($accountId)
+    {
+        $this->account_id = $accountId;
+
+        return $this;
+    }
+
+    /**
+     * Get accountId
+     *
+     * @return integer
+     */
+    public function getAccountId()
+    {
+        return $this->account_id;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return Project
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+}

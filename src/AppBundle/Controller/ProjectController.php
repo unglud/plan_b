@@ -38,6 +38,8 @@ class ProjectController extends Controller
      *
      * @Route("/new", name="project_new")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function newAction(Request $request)
     {
@@ -47,6 +49,10 @@ class ProjectController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $project->setSlug($this->get('slugify')->slugify($project->getName()));
+            $project->setStatus(1);
+            //TODO: get real account ID
+            $project->setAccountId(1);
             $em->persist($project);
             $em->flush();
 
