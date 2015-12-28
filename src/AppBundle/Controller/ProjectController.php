@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Service\Menu;
 use AppBundle\Service\MenuItem;
+use AppBundle\Service\Mudnames;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -30,9 +31,12 @@ class ProjectController extends Controller
 
         $projects = $em->getRepository('AppBundle:Project')->findAll();
 
-        $menu = (new Menu([new MenuItem('project_new','Add project')]))->getItems();
+        $menu = (new Menu([new MenuItem('project_new', 'Add project')]))->getItems();
 
-        return $this->render('project/index.html.twig', compact('projects','menu'));
+        //die(var_dump($menu[0]->title));
+        //die(var_dump($projects));
+
+        return $this->render('project/index.html.twig', compact('projects', 'menu'));
     }
 
     /**
@@ -51,7 +55,9 @@ class ProjectController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $project->setSlug($this->get('slugify')->slugify($project->getName()));
+            $slug = $this->get('slugify')->slugify($project->getName());
+            $slug = $this->ubiquitySlug($slug);
+            $project->setSlug($slug);
             $project->setStatus(1);
             //TODO: get real account ID
             $project->setAccountId(1);
@@ -70,11 +76,15 @@ class ProjectController extends Controller
     /**
      * Finds and displays a Project entity.
      *
-     * @Route("/{id}", name="project_show")
+     * @Route("/{slug}", name="project_show")
      * @Method("GET")
      */
-    public function showAction(Project $project)
+    public function showAction($slug)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $project = $em->getRepository('AppBundle:Project')->findBySlug($slug);
+
         $deleteForm = $this->createDeleteForm($project);
 
         return $this->render('project/show.html.twig', array(
@@ -142,7 +152,26 @@ class ProjectController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('project_delete', array('id' => $project->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
+    }
+
+    /**
+     * @param $slug
+     * @param string $newSlug
+     * @return mixed
+     * @internal param $em
+     */
+    private function ubiquitySlug($slug, $newSlug = '')
+    {
+        if(!$newSlug) $newSlug = $slug;
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository('AppBundle:Project')->findBySlug($slug);
+
+        if ($project) {
+            $newSlug = $slug. '-' .Mudnames::generate_name_from();
+            return $this->ubiquitySlug($slug, $newSlug);
+        }
+
+        return $newSlug;
     }
 }

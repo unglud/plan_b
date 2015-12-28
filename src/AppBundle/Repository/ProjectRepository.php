@@ -10,4 +10,9 @@ namespace AppBundle\Repository;
  */
 class ProjectRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findBySlug($slug)
+    {
+        //TODO: get real account ID
+        return $this->findOneBy(['slug' => $slug, 'account_id' => 1]);
+    }
 }

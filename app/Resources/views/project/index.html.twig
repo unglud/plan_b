@@ -7,7 +7,7 @@
             {% for project in projects %}
 
                 <div class="card">
-                    <a href="{{ path('project_show', { 'id': project.id }) }}">
+                    <a href="{{ path('project_show', { 'slug': project.slug }) }}">
                         <div class="card-block">
                             <h4 class="card-title">{{ project.name }}</h4>
                             <p class="card-text">{{ project.description }}</p>
