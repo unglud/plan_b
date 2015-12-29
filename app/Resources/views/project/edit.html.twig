@@ -1,15 +1,8 @@
 {% extends 'base.html.twig' %}
-{% form_theme edit_form 'form/fields.html.twig' %}
+{% block title %}Edit {{ project.name }}{% endblock %}
 
 {% block body %}
-    <div class="jumbotron">
-        <h1 class="display-3">Project edit</h1>
-        <hr class="m-y-2">
-        {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Save" class="btn btn-primary"/>
-        <a href="{{ path('project_show', {'slug':project.slug}) }}" class="btn btn-secondary">Cancel</a>
-        {{ form_end(edit_form) }}
-    </div>
+
+    {{ include('project/form.html.twig', { 'type': 'edit', 'title':'Project edit' }) }}
 
 {% endblock %}

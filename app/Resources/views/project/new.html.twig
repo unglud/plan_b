@@ -1,17 +1,9 @@
 {% extends 'base.html.twig' %}
-{% form_theme form 'form/fields.html.twig' %}
+{% block title %}New project{% endblock %}
 
 {% block body %}
 
+    {{ include('project/form.html.twig', { 'type': 'new', 'title':'Create a new project', 'desc':'Create new cool project' }) }}
 
-    <div class="jumbotron">
-        <h1 class="display-3">Create a new project</h1>
-        <p class="lead">Create new cool project</p>
-        <hr class="m-y-2">
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-            <input type="submit" value="Create" class="btn btn-primary"/>
-        {{ form_end(form) }}
-    </div>
 
 {% endblock %}

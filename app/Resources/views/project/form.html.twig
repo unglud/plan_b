@@ -1,0 +1,17 @@
+{% form_theme form 'form/fields.html.twig' %}
+<div class="jumbotron">
+    <h1 class="display-3">{{ title }}</h1>
+    {% if desc is defined %}
+    <p class="lead">{{ desc }}</p>
+    {% endif %}
+    <hr class="m-y-2">
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {% if type == 'edit' %}
+        <input type="submit" value="Save" class="btn btn-primary"/>
+        <a href="{{ path('project_show', {'slug':project.slug}) }}" class="btn btn-secondary">Cancel</a>
+    {% else %}
+        <input type="submit" value="Create" class="btn btn-primary"/>
+    {% endif %}
+    {{ form_end(form) }}
+</div>

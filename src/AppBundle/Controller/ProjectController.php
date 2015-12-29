@@ -42,7 +42,7 @@ class ProjectController extends Controller
     /**
      * Creates a new Project entity.
      *
-     * @Route("/new", name="project_new")
+     * @Route("/new/", name="project_new")
      * @Method({"GET", "POST"})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -76,7 +76,7 @@ class ProjectController extends Controller
     /**
      * Finds and displays a Project entity.
      *
-     * @Route("/{slug}", name="project_show")
+     * @Route("/{slug}/", name="project_show")
      * @Method("GET")
      * @param $slug
      * @return \Symfony\Component\HttpFoundation\Response
@@ -92,6 +92,7 @@ class ProjectController extends Controller
 
         $delete_form = $this->createDeleteForm($project)->createView();
 
+
         $submenu = (new Menu([
             new MenuItem($this->generateUrl('project_edit', compact('slug')), 'Edit')
         ]))->getItems();
@@ -102,7 +103,7 @@ class ProjectController extends Controller
     /**
      * Displays a form to edit an existing Project entity.
      *
-     * @Route("/{slug}/edit", name="project_edit")
+     * @Route("/{slug}/edit/", name="project_edit")
      * @Method({"GET", "POST"})
      * @param Request $request
      * @param $slug
@@ -127,15 +128,15 @@ class ProjectController extends Controller
         $submenu = (new Menu([
             new MenuItem(['form'=>$deleteForm->createView()], 'Delete')
         ]))->getItems();
-        $edit_form = $editForm->createView();
+        $form = $editForm->createView();
 
-        return $this->render('project/edit.html.twig', compact('project','edit_form','submenu'));
+        return $this->render('project/edit.html.twig', compact('project','form','submenu'));
     }
 
     /**
      * Deletes a Project entity.
      *
-     * @Route("/{slug}", name="project_delete")
+     * @Route("/{slug}/", name="project_delete")
      * @Method("DELETE")
      * @param Request $request
      * @param $slug
