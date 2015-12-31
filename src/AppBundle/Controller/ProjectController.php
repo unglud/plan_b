@@ -130,7 +130,7 @@ class ProjectController extends Controller
         ]))->getItems();
         $form = $editForm->createView();
 
-        return $this->render('project/edit.html.twig', compact('project','form','submenu'));
+        return $this->render('project/edit.html.twig', compact('project', 'form', 'submenu'));
     }
 
     /**

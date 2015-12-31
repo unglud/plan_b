@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -67,6 +68,19 @@ class Project
      * @ORM\Column(name="modified_at", type="datetime")
      */
     private $modifiedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="project")
+     */
+    private $tasks;
+
+    /**
+     * Project constructor.
+     * @internal param $tasks
+     */
+    public function __construct(){
+        $this->tasks = new ArrayCollection();
+    }
 
 
     /**
@@ -264,5 +278,39 @@ class Project
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Add task
+     *
+     * @param Task $task
+     *
+     * @return Project
+     */
+    public function addTask(Task $task)
+    {
+        $this->tasks[] = $task;
+
+        return $this;
+    }
+
+    /**
+     * Remove task
+     *
+     * @param Task $task
+     */
+    public function removeTask(Task $task)
+    {
+        $this->tasks->removeElement($task);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
     }
 }
